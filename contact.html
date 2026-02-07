@@ -70,6 +70,19 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
         }
+        .instagram-btn{
+            background: linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);
+            color:white;
+            border:none;
+            display:inline-flex;
+            align-items:center;
+            gap:0.5rem;
+        }
+
+        .instagram-btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 5px 20px rgba(255,0,150,0.3);
+        }
     </style>
 </head>
 
@@ -129,11 +142,19 @@
             <!-- FORM END -->
 
             <!-- WHATSAPP -->
-            <div style="text-align:center; margin-top:2rem; border-top:1px solid var(--border-color); padding-top:2rem;">
+            <!-- <div style="text-align:center; margin-top:2rem; border-top:1px solid var(--border-color); padding-top:2rem;">
                 <p style="margin-bottom:1rem;">Prefer WhatsApp?</p>
 
                 <a href="https://wa.me/+917736989261" class="btn whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                </a>
+            </div> -->
+
+            <div style="text-align:center; margin-top:2rem; border-top:1px solid var(--border-color); padding-top:2rem;">
+                <p style="margin-bottom:1rem;">Prefer Instagram?</p>
+
+                <a href="https://instagram.com/fayas.creatives" target="_blank" class="btn instagram-btn">
+                    <i class="fab fa-instagram"></i> Message on Instagram
                 </a>
             </div>
 
@@ -184,32 +205,77 @@
     </div>
 </footer>
 
+<!-- TOAST -->
+<div id="toast" class="toast">Message sent!</div>
+
+<style>
+.toast{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:#111;
+    color:white;
+    padding:14px 22px;
+    border-radius:8px;
+    border:1px solid #333;
+    opacity:0;
+    transition:all .4s ease;
+    z-index:9999;
+    font-family:Outfit;
+}
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+</style>
+
 <!-- FORM SCRIPT -->
 <script>
-document.getElementById("contactForm").addEventListener("submit", async function(e){
+const form = document.getElementById("contactForm");
+const toast = document.getElementById("toast");
+
+function showToast(msg,color="#4CAF50"){
+    toast.textContent = msg;
+    toast.style.borderColor = color;
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },3000);
+}
+
+form.addEventListener("submit", async (e)=>{
     e.preventDefault();
 
-    const formData = new FormData(this);
+    const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
-    const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
+    try{
+        const res = await fetch("/api/contact",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        });
 
-    if(res.ok){
-        alert("Message sent successfully!");
-        this.reset();
-    } else {
-        alert("Something went wrong. Try again.");
+        if(res.ok){
+            showToast("Message sent successfully 🚀");
+            form.reset();
+        }else{
+            showToast("Something went wrong","red");
+        }
+    }catch(err){
+        showToast("Network error","red");
     }
 });
 </script>
 
+
+
+
 <script src="script.js"></script>
+
+
 
 </body>
 </html>
