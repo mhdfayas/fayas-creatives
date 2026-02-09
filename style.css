@@ -168,9 +168,9 @@ img {
 
 .logo {
     font-size: 1.5rem;
-    font-weight: 700;
+    /* font-weight: 700; */
     font-family: Gulfs;
-    /* letter-spacing: -0.5px; */
+    letter-spacing: -0.5px;
     
 }
 
